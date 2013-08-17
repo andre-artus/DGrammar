@@ -520,13 +520,13 @@ castQualifier:
     | 'shared' 'inout'
     ;
 
-catch:
-    'catch' '(' type Identifier? ')' declarationOrStatement
+catchClause:
+    Catch '(' type Identifier? ')' declarationOrStatement
     ;
 
 catches:
-      catch+
-    | catch* lastCatch
+      catchClause+
+    | catchClause* lastCatch
     ;
 
 classDeclaration:
@@ -670,8 +670,8 @@ finalSwitchStatement:
     'final' switchStatement
     ;
 
-finally:
-    'finally' declarationOrStatement
+finallyClause:
+    Finally declarationOrStatement
     ;
 
 forStatement:
@@ -745,6 +745,8 @@ identityExpression:
 
 ifStatement:
     'if' '(' ifCondition ')' declarationOrStatement ('else' declarationOrStatement)?
+    ;
+
 ifCondition:
       'auto' Identifier '=' expression
     | type Identifier '=' expression
@@ -822,7 +824,7 @@ lambdaExpression:
     ;
 
 lastCatch:
-    'catch' statementNoCaseNoDefault
+    Catch statementNoCaseNoDefault
     ;
 
 linkageAttribute:
@@ -919,8 +921,7 @@ orExpression:
     ;
 
 orOrExpression:
-      andAndExpression
-    | orOrExpression '||' andAndExpression
+    andAndExpression (LogicOr andAndExpression)*
     ;
 
 outStatement:
@@ -1240,11 +1241,11 @@ throwStatement:
     ;
 
 traitsExpression:
-    '__traits' '(' Identifier ',' TemplateArgumentList ')'
+    '__traits' '(' Identifier ',' templateArgumentList ')'
     ;
 
 tryStatement:
-    'try' declarationOrStatement (catches | catches finally | finally)
+    'try' declarationOrStatement (catches | catches finallyClause | finallyClause)
     ;
 
 type:
